@@ -1,4 +1,15 @@
+import matplotlib.pyplot as plt
 import numpy as np
+
+
+def get_fun1():
+    return np.linspace(-3, 3, 200), \
+            lambda x: np.sqrt((0.1 * x ** 2 + x - 0.3)/(-0.2))
+
+
+def get_fun2():
+    return np.linspace(-3, 3, 200), \
+            lambda x: np.sqrt((-0.2 * x ** 2 + 0.7)/(1 - 0.1 * x))
 
 
 def get_phi1(x1, x2):
@@ -51,9 +62,10 @@ def alg(eps):
     print("Вектор погрешностей для x2: ")
     for i in x2_err:
         print(i)
-    print("Количество итераций: ")
-    print()
-    print(iterations)
-
-
+    print(f"Количество итераций: {iterations}")
+    x, fun = get_fun1()
+    plt.plot(x, fun(x))
+    x, fun = get_fun2()
+    plt.plot(x, fun(x))
+    plt.show()
 alg(0.01)

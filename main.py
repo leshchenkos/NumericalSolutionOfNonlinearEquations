@@ -2,51 +2,12 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 
-def diff(n, x, f, h=0.00000001):
-    if n <= 0:
-        return None
-    elif n == 1:
-        return (f(x + h) - f(x)) / h
-    return (diff(n - 1, x + h, f) - diff(n - 1, x, f)) / h
-
-
-def secant_method(a, b, f, e):
-    if f(a) * diff(2, a, f) > 0:
-        x0 = a
-    elif f(b) * diff(2, a, f) > 0:
-        x0 = b
-    else:
-        return None
-    x1 = x0 + e
-    x = x1 + 2 * e
-
-    iteration = 0
-    while abs(x - x1) > e:
-        x1, x, x0 = x1 - (x1 - x0) / (f(x1) - f(x0)) * f(x1), x1, x
-        iteration = iteration + 1
-
-    return x1, f(x1), iteration
-
-
-def iteration_method(x0, f, e):
-    def phi(x):
-        return x + (-1 / diff(1, x, f)) * f(x)
-    x = phi(x0)
-    iteration = 0
-    while abs(x - x0) > e:
-        if diff(1, x, phi) >= 1:
-            return None
-        x0, x = x, g(x)
-        iteration = iteration + 1
-    return x, f(x), iteration
-
-
 def get_fun(function_num):
     if function_num == '1':
-        return np.linspace(-3, 2, 200), \
+        return np.linspace(-3, 3, 200), \
                lambda x: x ** 3 - x + 4
     elif function_num == '2':
-        return np.linspace(-1, 3, 200), \
+        return np.linspace(-3, 3, 200), \
                lambda x: x ** 3 - 3 * (x ** 2) + 2 * x + 1
     elif function_num == '3':
         return np.linspace(-10, 10, 200), \
@@ -152,10 +113,50 @@ def keyboard_input():
     return hashMap
 
 
+def diff(n, x, f):
+    h = 0.00000001
+    if n <= 0:
+        return None
+    elif n == 1:
+        return (f(x + h) - f(x)) / h
+    return (diff(n - 1, x + h, f) - diff(n - 1, x, f)) / h
+
+
+def secant_method(a, b, f, e):
+    if f(a) * diff(2, a, f) > 0:
+        x0 = a
+    elif f(b) * diff(2, a, f) > 0:
+        x0 = b
+    else:
+        return None
+    x1 = x0 + e
+    x = x1 + 2 * e
+    iteration = 0
+    while abs(x - x1) > e:
+        x1, x, x0 = x1 - (x1 - x0) / (f(x1) - f(x0)) * f(x1), x1, x
+        iteration = iteration + 1
+
+    return x1, f(x1), iteration
+
+
+def iteration_method(x0, f, e):
+    def phi(x):
+        return x + (-1 / diff(1, x, f)) * f(x)
+    x = phi(x0)
+    iteration = 0
+    while abs(x - x0) > e:
+        if diff(1, x, phi) >= 1:
+            return None
+        x0, x = x, phi(x)
+        iteration = iteration + 1
+    return x, f(x), iteration
+
+
 def main():
     print("Лабораторная работа #2")
-    print("Численное решение нелинейных уравнений")
+    print("Численное решение нелинейных уравнений и систем")
     print("Вариант 11")
+    print("Автор: Лещенко Сергей")
     print()
     print("Для чтения с клавиатуры нажмите 1, для чтения из файла 2")
     choice = input()
